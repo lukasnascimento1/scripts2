@@ -39,16 +39,16 @@ if [ ! -d ".git" ]; then
     git commit -m "Commit inicial"
 fi
 
-# Cria o repositório no GitHub
-echo "Criando o repositório '$nome' no GitHub..."
-gh repo create "$nome" $tipo --source=. --push
-
-# Cria o repositório usando GitHub CLI
-echo "Criando o repositório '$nome' no GitHub..."
-gh repo create "$nome" $tipo --source=. --push
-
-if [ $? -eq 0 ]; then
-    echo "Repositório '$nome' criado com sucesso!"
+# Verifica se o repositório já existe no GitHub
+if gh repo view "$nome" &>/dev/null; then
+    echo "Repositório '$nome' já existe no GitHub. Pulando criação."
 else
-    echo "Ocorreu um erro ao criar o repositório."
+    echo "Criando o repositório '$nome' no GitHub..."
+    gh repo create "$nome" $tipo --source=. --push
+
+    if [ $? -eq 0 ]; then
+        echo "Repositório '$nome' criado com sucesso!"
+    else
+        echo "Ocorreu um erro ao criar o repositório."
+    fi
 fi
